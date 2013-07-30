@@ -1,5 +1,7 @@
 # StatsD Client
 
+[![Build Status](https://travis-ci.org/jcoene/statsd-client.png)](https://travis-ci.org/jcoene/statsd-client)
+
 This is a no-nonsense StatsD client written in Go. It reconnects automatically if the write socket fails, making it at least 1000% better than any other StatsD client available.
 
 It doesn't support sampling, I'd welcome a good pull request.
