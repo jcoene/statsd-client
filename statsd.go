@@ -26,13 +26,17 @@ func NewClient(addr string, prefix string) (c *Client, err error) {
 	return
 }
 
-func (c *Client) Inc(k string, d int64) error {
+func (c *Client) Count(k string, d int64) error {
 	m := fmt.Sprintf("%s:%d|c", c.prefix(k), d)
 	return c.send([]byte(m))
 }
 
+func (c *Client) Inc(k string, d int64) error {
+	return c.Count(k, d)
+}
+
 func (c *Client) Dec(k string, d int64) error {
-	return c.Inc(k, -d)
+	return c.Count(k, -d)
 }
 
 func (c *Client) Gauge(k string, v int64) error {
@@ -40,9 +44,12 @@ func (c *Client) Gauge(k string, v int64) error {
 	return c.send([]byte(m))
 }
 
-func (c *Client) Timing(k string, v int64) error {
+func (c *Client) Measure(k string, v int64) error {
 	m := fmt.Sprintf("%s:%d|ms", c.prefix(k), v)
 	return c.send([]byte(m))
+}
+func (c *Client) Timing(k string, v int64) error {
+	return c.Measure(k, v)
 }
 
 func (c *Client) redial() (err error) {
