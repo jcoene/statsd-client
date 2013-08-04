@@ -69,7 +69,6 @@ func (c *Client) send(data []byte) (err error) {
 
 	_, err = c.rw.Write(data)
 	if err != nil {
-		fmt.Println("redialing")
 		c.redial()
 	}
 
