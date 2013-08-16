@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net"
 	"sync"
+	"time"
 )
 
 type Client struct {
@@ -50,6 +51,12 @@ func (c *Client) Measure(k string, v int64) error {
 }
 func (c *Client) Timing(k string, v int64) error {
 	return c.Measure(k, v)
+}
+
+func (c *Client) MeasureDur(k string, dur time.Duration) error {
+	v := int64(dur.Seconds() * 1000.0)
+	m := fmt.Sprintf("%s:%d|ms", c.prefix(k), v)
+	return c.send([]byte(m))
 }
 
 func (c *Client) redial() (err error) {

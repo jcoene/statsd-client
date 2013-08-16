@@ -15,12 +15,12 @@ import "github.com/jcoene/statsd-client"
 
 client, err := statsd.NewClient("127.0.0.1:8125", "myapp")
 
-client.Count("http.response.200.count", 1)      // myapp.http.response.200.count:1|c
-client.Inc("http.response.200.count", 1)        // myapp.http.response.200.count:1|c
-client.Dec("http.response.200.count", 1)        // myapp.http.response.200.count:-1|c
-client.Measure("http.response.200.runtime", 50) // myapp.http.response.200.runtime:50|ms
-client.Timing("http.response.200.runtime", 50)  // myapp.http.response.200.runtime:50|ms
-client.Gauge("server.load", 5)                  // myapp.server.load:5|g
+client.Count("http.response.200.count", 1)         // myapp.http.response.200.count:1|c
+client.Inc("http.response.200.count", 1)           // myapp.http.response.200.count:1|c
+client.Dec("http.response.200.count", 1)           // myapp.http.response.200.count:-1|c
+client.Measure("http.response.200.runtime", 50)    // myapp.http.response.200.runtime:50|ms
+client.MeasureDur("job.runtime", 50 * time.Second) // myapp.job.runtime:50000|ms
+client.Gauge("server.load", 5)                     // myapp.server.load:5|g
 ```
 
 ## License

@@ -86,6 +86,27 @@ func TestMeasure(t *testing.T) {
 	CompareFrom(ch, "myapp.web.response.duration:142|ms", t)
 }
 
+func TestMeasureDurMs(t *testing.T) {
+	ch := ListenOnce()
+	cli, _ := NewClient("127.0.0.1:8005", "myapp")
+	cli.MeasureDur("web.response.duration", 32*time.Millisecond)
+	CompareFrom(ch, "myapp.web.response.duration:32|ms", t)
+}
+
+func TestMeasureDurSec(t *testing.T) {
+	ch := ListenOnce()
+	cli, _ := NewClient("127.0.0.1:8005", "myapp")
+	cli.MeasureDur("job.hardjob.duration", 11*time.Second)
+	CompareFrom(ch, "myapp.job.hardjob.duration:11000|ms", t)
+}
+
+func TestMeasureDurMin(t *testing.T) {
+	ch := ListenOnce()
+	cli, _ := NewClient("127.0.0.1:8005", "myapp")
+	cli.MeasureDur("job.hardjob.duration", 11*time.Minute)
+	CompareFrom(ch, "myapp.job.hardjob.duration:660000|ms", t)
+}
+
 func TestTiming(t *testing.T) {
 	ch := ListenOnce()
 	cli, _ := NewClient("127.0.0.1:8005", "myapp")
