@@ -23,6 +23,16 @@ client.MeasureDur("job.runtime", 50 * time.Second) // myapp.job.runtime:50000|ms
 client.Gauge("server.load", 5)                     // myapp.server.load:5|g
 ```
 
+You can also establish a default client that can be shared between parts of your app:
+
+```go
+import "github.com/jcoene/statsd-client"
+
+err := statsd.NewDefaultClient("127.0.0.1:8125", "myapp")
+
+statsd.Count("http.response.200.count", 1)         // myapp.http.response.200.count:1|c
+```
+
 ## License
 
 MIT License, see LICENSE file.
