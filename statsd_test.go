@@ -51,6 +51,30 @@ func CompareFrom(ch chan string, expect string, t *testing.T) {
 	}
 }
 
+func TestDebug(t *testing.T) {
+	ch := ListenOnce()
+	cli, _ := NewClient("127.0.0.1:8005", "myapp")
+
+	defer func() {
+		// Clean up the listening socket
+		cli.SetDebug(false)
+		cli.Count("customers.new", 3)
+		<-ch
+	}()
+
+	cli.SetDebug(true)
+	defer cli.SetDebug(false)
+	cli.Count("customers.new", 3)
+
+	time.Sleep(500 * time.Millisecond)
+
+	select {
+	case s := <-ch:
+		t.Errorf("expected nothing to be received in debug mode, got %s", s)
+	default:
+	}
+}
+
 func TestCount(t *testing.T) {
 	ch := ListenOnce()
 	cli, _ := NewClient("127.0.0.1:8005", "myapp")

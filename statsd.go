@@ -11,6 +11,7 @@ import (
 type Client struct {
 	Addr   string
 	Prefix string
+	debug  bool
 	nc     net.Conn
 	mu     sync.Mutex
 	rw     *bufio.ReadWriter
@@ -25,6 +26,13 @@ func NewClient(addr string, prefix string) (c *Client, err error) {
 	err = c.redial()
 
 	return
+}
+
+func (c *Client) SetDebug(b bool) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+
+	c.debug = b
 }
 
 func (c *Client) Count(k string, d int64) error {
@@ -73,6 +81,11 @@ func (c *Client) redial() (err error) {
 func (c *Client) send(data []byte) (err error) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
+
+	if c.debug {
+		fmt.Println("StatsD:", string(data))
+		return
+	}
 
 	_, err = c.rw.Write(data)
 	if err != nil {

@@ -14,6 +14,10 @@ func NewDefaultClient(addr string, prefix string) (err error) {
 	return
 }
 
+func SetDebug(b bool) {
+	defaultClient.SetDebug(b)
+}
+
 func Count(k string, d int64) error {
 	if defaultClient == nil {
 		return ErrNoDefaultClientConfigured
