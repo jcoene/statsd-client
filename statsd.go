@@ -53,6 +53,11 @@ func (c *Client) Gauge(k string, v int64) error {
 	return c.send([]byte(m))
 }
 
+func (c *Client) IncGauge(k string, v int64) error {
+	m := fmt.Sprintf("%s:%d|ig", c.prefix(k), v)
+	return c.send([]byte(m))
+}
+
 func (c *Client) Measure(k string, v int64) error {
 	m := fmt.Sprintf("%s:%d|ms", c.prefix(k), v)
 	return c.send([]byte(m))
