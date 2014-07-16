@@ -103,6 +103,13 @@ func TestGauge(t *testing.T) {
 	CompareFrom(ch, "myapp.queue.default.depth:342|g", t)
 }
 
+func TestIncGauge(t *testing.T) {
+	ch := ListenOnce()
+	cli, _ := NewClient("127.0.0.1:8005", "myapp")
+	cli.IncGauge("queue.default.depth", 5)
+	CompareFrom(ch, "myapp.queue.default.depth:5|ig", t)
+}
+
 func TestMeasure(t *testing.T) {
 	ch := ListenOnce()
 	cli, _ := NewClient("127.0.0.1:8005", "myapp")
