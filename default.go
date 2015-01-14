@@ -2,12 +2,22 @@ package statsd
 
 import (
 	"errors"
+	"os"
 	"time"
 )
 
 var defaultClient *Client
 
 var ErrNoDefaultClientConfigured = errors.New("statsd: no default client configured")
+
+func init() {
+	addr := os.Getenv("STATSD_HOST")
+	if addr == "" {
+		addr = "127.0.0.1:8125"
+	}
+
+	NewDefaultClient(addr, os.Getenv("STATSD_PREFIX"))
+}
 
 func NewDefaultClient(addr string, prefix string) (err error) {
 	defaultClient, err = NewClient(addr, prefix)
