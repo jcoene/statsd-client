@@ -48,22 +48,22 @@ func (c *Client) Dec(k string, d int64) error {
 	return c.Count(k, -d)
 }
 
-func (c *Client) Gauge(k string, v int64) error {
-	m := fmt.Sprintf("%s:%d|g", c.prefix(k), v)
+func (c *Client) Gauge(k string, v float64) error {
+	m := fmt.Sprintf("%s:%.3f|g", c.prefix(k), v)
 	return c.send([]byte(m))
 }
 
-func (c *Client) Measure(k string, v int64) error {
-	m := fmt.Sprintf("%s:%d|ms", c.prefix(k), v)
+func (c *Client) Measure(k string, v float64) error {
+	m := fmt.Sprintf("%s:%.3f|ms", c.prefix(k), v)
 	return c.send([]byte(m))
 }
-func (c *Client) Timing(k string, v int64) error {
+func (c *Client) Timing(k string, v float64) error {
 	return c.Measure(k, v)
 }
 
 func (c *Client) MeasureDur(k string, dur time.Duration) error {
-	v := int64(dur.Seconds() * 1000.0)
-	m := fmt.Sprintf("%s:%d|ms", c.prefix(k), v)
+	v := float64(dur) / float64(time.Millisecond)
+	m := fmt.Sprintf("%s:%.3f|ms", c.prefix(k), v)
 	return c.send([]byte(m))
 }
 

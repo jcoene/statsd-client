@@ -52,7 +52,7 @@ func Dec(k string, d int64) error {
 	return defaultClient.Dec(k, d)
 }
 
-func Gauge(k string, v int64) error {
+func Gauge(k string, v float64) error {
 	if defaultClient == nil {
 		return ErrNoDefaultClientConfigured
 	}
@@ -60,7 +60,7 @@ func Gauge(k string, v int64) error {
 	return defaultClient.Gauge(k, v)
 }
 
-func Measure(k string, v int64) error {
+func Measure(k string, v float64) error {
 	if defaultClient == nil {
 		return ErrNoDefaultClientConfigured
 	}
@@ -68,7 +68,7 @@ func Measure(k string, v int64) error {
 	return defaultClient.Measure(k, v)
 }
 
-func Timing(k string, v int64) error {
+func Timing(k string, v float64) error {
 	if defaultClient == nil {
 		return ErrNoDefaultClientConfigured
 	}
