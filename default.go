@@ -1,85 +1,69 @@
 package statsd
 
 import (
-	"errors"
 	"os"
 	"time"
 )
 
-var defaultClient *Client
-
-var ErrNoDefaultClientConfigured = errors.New("statsd: no default client configured")
+var DefaultClient *Client
 
 func init() {
+	Init()
+}
+
+func Init() {
 	addr := os.Getenv("STATSD_HOST")
 	if addr == "" {
 		addr = "127.0.0.1:8125"
 	}
 
 	NewDefaultClient(addr, os.Getenv("STATSD_PREFIX"))
+
+	if s := os.Getenv("STATSD_PROTO"); s != "" {
+		DefaultClient.Proto = s
+	}
+
+	if s := os.Getenv("STATSD_DELAY"); s != "" {
+		DefaultClient.SetDelay(s)
+	}
 }
 
-func NewDefaultClient(addr string, prefix string) (err error) {
-	defaultClient, err = NewClient(addr, prefix)
-	return
+func NewDefaultClient(addr string, prefix string) {
+	DefaultClient = NewClient(addr, prefix)
 }
 
 func SetDebug(b bool) {
-	defaultClient.SetDebug(b)
+	DefaultClient.SetDebug(b)
 }
 
-func Count(k string, d int64) error {
-	if defaultClient == nil {
-		return ErrNoDefaultClientConfigured
-	}
-
-	return defaultClient.Count(k, d)
+func SetDelay(s string) {
+	DefaultClient.SetDelay(s)
 }
 
-func Inc(k string, d int64) error {
-	if defaultClient == nil {
-		return ErrNoDefaultClientConfigured
-	}
-
-	return defaultClient.Inc(k, d)
+func Count(k string, d int64) {
+	DefaultClient.Count(k, d)
 }
 
-func Dec(k string, d int64) error {
-	if defaultClient == nil {
-		return ErrNoDefaultClientConfigured
-	}
-
-	return defaultClient.Dec(k, d)
+func Inc(k string, d int64) {
+	DefaultClient.Inc(k, d)
 }
 
-func Gauge(k string, v float64) error {
-	if defaultClient == nil {
-		return ErrNoDefaultClientConfigured
-	}
-
-	return defaultClient.Gauge(k, v)
+func Dec(k string, d int64) {
+	DefaultClient.Dec(k, d)
 }
 
-func Measure(k string, v float64) error {
-	if defaultClient == nil {
-		return ErrNoDefaultClientConfigured
-	}
-
-	return defaultClient.Measure(k, v)
+func Gauge(k string, v float64) {
+	DefaultClient.Gauge(k, v)
 }
 
-func Timing(k string, v float64) error {
-	if defaultClient == nil {
-		return ErrNoDefaultClientConfigured
-	}
-
-	return defaultClient.Timing(k, v)
+func Measure(k string, v float64) {
+	DefaultClient.Measure(k, v)
 }
 
-func MeasureDur(k string, dur time.Duration) error {
-	if defaultClient == nil {
-		return ErrNoDefaultClientConfigured
-	}
+func Timing(k string, v float64) {
+	DefaultClient.Timing(k, v)
+}
 
-	return defaultClient.MeasureDur(k, dur)
+func MeasureDur(k string, dur time.Duration) {
+	DefaultClient.MeasureDur(k, dur)
 }

@@ -46,14 +46,14 @@ func CompareFrom(ch chan string, expect string, t *testing.T) {
 		if res != expect {
 			t.Errorf("expected %s, got %s", expect, res)
 		}
-	case <-time.After(1 * time.Second):
+	case <-time.After(2 * time.Second):
 		t.Errorf("timeout")
 	}
 }
 
 func TestDebug(t *testing.T) {
 	ch := ListenOnce()
-	cli, _ := NewClient("127.0.0.1:8005", "myapp")
+	cli := NewClient("127.0.0.1:8005", "myapp")
 
 	defer func() {
 		// Clean up the listening socket
@@ -77,84 +77,84 @@ func TestDebug(t *testing.T) {
 
 func TestCount(t *testing.T) {
 	ch := ListenOnce()
-	cli, _ := NewClient("127.0.0.1:8005", "myapp")
+	cli := NewClient("127.0.0.1:8005", "myapp")
 	cli.Count("customers.new", 3)
 	CompareFrom(ch, "myapp.customers.new:3|c", t)
 }
 
 func TestInc(t *testing.T) {
 	ch := ListenOnce()
-	cli, _ := NewClient("127.0.0.1:8005", "myapp")
+	cli := NewClient("127.0.0.1:8005", "myapp")
 	cli.Inc("invoices.received", 3<<30)
 	CompareFrom(ch, "myapp.invoices.received:3221225472|c", t)
 }
 
 func TestDec(t *testing.T) {
 	ch := ListenOnce()
-	cli, _ := NewClient("127.0.0.1:8005", "myapp")
+	cli := NewClient("127.0.0.1:8005", "myapp")
 	cli.Dec("customers.maintained", 60)
 	CompareFrom(ch, "myapp.customers.maintained:-60|c", t)
 }
 
 func TestGauge(t *testing.T) {
 	ch := ListenOnce()
-	cli, _ := NewClient("127.0.0.1:8005", "myapp")
+	cli := NewClient("127.0.0.1:8005", "myapp")
 	cli.Gauge("queue.default.depth", 342)
 	CompareFrom(ch, "myapp.queue.default.depth:342.000|g", t)
 }
 
 func TestGaugePrecision(t *testing.T) {
 	ch := ListenOnce()
-	cli, _ := NewClient("127.0.0.1:8005", "myapp")
+	cli := NewClient("127.0.0.1:8005", "myapp")
 	cli.Gauge("queue.default.depth", 342.1234)
 	CompareFrom(ch, "myapp.queue.default.depth:342.123|g", t)
 }
 
 func TestMeasure(t *testing.T) {
 	ch := ListenOnce()
-	cli, _ := NewClient("127.0.0.1:8005", "myapp")
+	cli := NewClient("127.0.0.1:8005", "myapp")
 	cli.Measure("web.response.duration", 142)
 	CompareFrom(ch, "myapp.web.response.duration:142.000|ms", t)
 }
 
 func TestMeasurePrecision(t *testing.T) {
 	ch := ListenOnce()
-	cli, _ := NewClient("127.0.0.1:8005", "myapp")
+	cli := NewClient("127.0.0.1:8005", "myapp")
 	cli.Measure("web.response.duration", 142.2415)
 	CompareFrom(ch, "myapp.web.response.duration:142.242|ms", t)
 }
 
 func TestMeasureDurMs(t *testing.T) {
 	ch := ListenOnce()
-	cli, _ := NewClient("127.0.0.1:8005", "myapp")
+	cli := NewClient("127.0.0.1:8005", "myapp")
 	cli.MeasureDur("web.response.duration", 32*time.Millisecond)
 	CompareFrom(ch, "myapp.web.response.duration:32.000|ms", t)
 }
 
 func TestMeasureDurSubMs(t *testing.T) {
 	ch := ListenOnce()
-	cli, _ := NewClient("127.0.0.1:8005", "myapp")
+	cli := NewClient("127.0.0.1:8005", "myapp")
 	cli.MeasureDur("web.response.duration", 1*time.Millisecond+123456*time.Nanosecond)
 	CompareFrom(ch, "myapp.web.response.duration:1.123|ms", t)
 }
 
 func TestMeasureDurSec(t *testing.T) {
 	ch := ListenOnce()
-	cli, _ := NewClient("127.0.0.1:8005", "myapp")
+	cli := NewClient("127.0.0.1:8005", "myapp")
 	cli.MeasureDur("job.hardjob.duration", 11*time.Second)
 	CompareFrom(ch, "myapp.job.hardjob.duration:11000.000|ms", t)
 }
 
 func TestMeasureDurMin(t *testing.T) {
 	ch := ListenOnce()
-	cli, _ := NewClient("127.0.0.1:8005", "myapp")
+	cli := NewClient("127.0.0.1:8005", "myapp")
 	cli.MeasureDur("job.hardjob.duration", 11*time.Minute+50000*time.Nanosecond)
 	CompareFrom(ch, "myapp.job.hardjob.duration:660000.050|ms", t)
 }
 
 func TestTiming(t *testing.T) {
 	ch := ListenOnce()
-	cli, _ := NewClient("127.0.0.1:8005", "myapp")
+	cli := NewClient("127.0.0.1:8005", "myapp")
 	cli.Timing("web.response.duration", 142)
 	CompareFrom(ch, "myapp.web.response.duration:142.000|ms", t)
 }
